@@ -52,14 +52,23 @@ def _check(tensor, compression, rtol=1e-5, atol=1e-8, chunk_size=30 * 1024):
     assert len(chunks) == max((len(serialized_tensor.buffer) - 1) // chunk_size + 1, 1)
     restored = combine_from_streaming(chunks)
     result = deserialize_torch_tensor(restored)
+<<<<<<< HEAD
     assert result.dtype == tensor.dtype, compression
     assert result.requires_grad == tensor.requires_grad
     assert torch.allclose(result, tensor, rtol=rtol, atol=atol)
+=======
+    assert torch.allclose(result, tensor, rtol=rtol, atol=atol)
+    assert result.dtype == tensor.dtype
+>>>>>>> disference
 
 
 @pytest.mark.forked
 def test_serialize_tensor():
+<<<<<<< HEAD
     tensor = torch.randn(512, 12288, requires_grad=True)
+=======
+    tensor = torch.randn(512, 12288)
+>>>>>>> disference
     for chunk_size in [1024, 64 * 1024, 64 * 1024 + 1, 10**9]:
         _check(tensor, CompressionType.NONE, chunk_size=chunk_size)
 
@@ -70,6 +79,7 @@ def test_serialize_tensor():
     _check(torch.tensor(1.0), CompressionType.FLOAT16)
 
 
+<<<<<<< HEAD
 @pytest.mark.parametrize(
     "dtype",
     [
@@ -103,6 +113,8 @@ def test_serialize_tensor_properties(dtype: torch.dtype, requires_grad: bool):
         _check(tensor, compression_type, atol=float("inf"))
 
 
+=======
+>>>>>>> disference
 @pytest.mark.parametrize("use_legacy_bfloat16", [True, False])
 @pytest.mark.parametrize("tensor_size", [(4096, 16), (0, 0)])
 @pytest.mark.forked

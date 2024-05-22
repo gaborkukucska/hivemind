@@ -187,5 +187,6 @@ class BlockwiseQuantization(Quantization):
         absmax = torch.as_tensor(absmax)
         codebook = torch.as_tensor(codebook)
         quantized = torch.as_tensor(quantized).reshape(tuple(serialized_tensor.size))
-        result = dequantize_blockwise(quantized, (absmax, codebook, *self.EXTRA_PARAMS))
-        return result.to(getattr(torch, serialized_tensor.dtype)).requires_grad_(serialized_tensor.requires_grad)
+        result = dequantize_blockwise(quantized, (absmax, codebook))  # Always returns a float32 tensor
+        result = result.to(dtype=getattr(torch, serialized_tensor.dtype))
+        return result
