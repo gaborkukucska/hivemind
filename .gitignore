@@ -1,6 +1,15 @@
+lib/
+share/
+etc/
+bin/
+
+
 # node and NPM
+
+
 npm-debug.log
 node_modules
+
 
 # swap files
 *~

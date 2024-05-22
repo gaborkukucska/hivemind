@@ -1,7 +1,8 @@
 import time
 from argparse import ArgumentParser
 from secrets import token_hex
-
+import glob
+import os
 from hivemind.dht import DHT, DHTNode
 from hivemind.utils.logging import get_logger, use_hivemind_log_handler
 from hivemind.utils.networking import log_visible_maddrs
@@ -21,6 +22,9 @@ async def report_status(dht: DHT, node: DHTNode):
 
     # Contact peers and keep the routing table healthy (remove stale PeerIDs)
     await node.get(f"heartbeat_{token_hex(16)}", latest=True)
+
+
+
 
 
 def main():
