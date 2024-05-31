@@ -6,13 +6,14 @@ from dataclasses import dataclass
 from typing import Dict, Optional
 
 import numpy as np
-from pydantic import BaseModel, StrictBool, StrictFloat, confloat, conint
+from pydantic import Field, BaseModel, StrictBool, StrictFloat
 
 from hivemind.dht import DHT
 from hivemind.dht.schema import BytesWithPublicKey, RSASignatureValidator, SchemaValidator
 from hivemind.utils import DHTExpiration, ValueWithExpiration, enter_asynchronously, get_dht_time, get_logger
 from hivemind.utils.crypto import RSAPrivateKey
 from hivemind.utils.performance_ema import PerformanceEMA
+from typing_extensions import Annotated
 
 logger = get_logger(__name__)
 
@@ -30,9 +31,9 @@ class GlobalTrainingProgress:
 
 class LocalTrainingProgress(BaseModel):
     peer_id: bytes
-    epoch: conint(ge=0, strict=True)
-    samples_accumulated: conint(ge=0, strict=True)
-    samples_per_second: confloat(ge=0.0, strict=True)
+    epoch: Annotated[int, Field(ge=0, strict=True)]
+    samples_accumulated: Annotated[int, Field(ge=0, strict=True)]
+    samples_per_second: Annotated[float, Field(ge=0.0, strict=True)]
     time: StrictFloat
     client_mode: StrictBool
 

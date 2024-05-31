@@ -8,6 +8,8 @@ from hivemind.dht.protocol import DHTProtocol
 from hivemind.dht.routing import DHTID
 from hivemind.dht.validation import DHTRecord, RecordValidatorBase
 from hivemind.utils import get_logger
+from pydantic import Field
+from typing_extensions import Annotated
 
 logger = get_logger(__name__)
 
@@ -162,8 +164,10 @@ def conbytes(*, regex: bytes = None, **kwargs) -> Type[pydantic.BaseModel]:
 
     compiled_regex = re.compile(regex) if regex is not None else None
 
-    class ConstrainedBytesWithRegex(pydantic.conbytes(**kwargs)):
+    class ConstrainedBytesWithRegex(Annotated[bytes, Field(**kwargs)]):
         @classmethod
+        # TODO[pydantic]: We couldn't refactor `__get_validators__`, please create the `__get_pydantic_core_schema__` manually.
+        # Check https://docs.pydantic.dev/latest/migration/#defining-custom-types for more information.
         def __get_validators__(cls):
             yield from super().__get_validators__()
             yield cls.match_regex
@@ -177,4 +181,4 @@ def conbytes(*, regex: bytes = None, **kwargs) -> Type[pydantic.BaseModel]:
     return ConstrainedBytesWithRegex
 
 
-BytesWithPublicKey = conbytes(regex=b".*" + RSASignatureValidator.PUBLIC_KEY_REGEX + b".*")
+BytesWithPublicKey = Annotated[bytes, Field(regex=b".*" + RSASignatureValidator.PUBLIC_KEY_REGEX + b".*")]
